@@ -127,7 +127,15 @@ class base_poll extends base_db {
    */
   public $module;
 
+  /**
+   * @var \Papaya\Module\Poll\PollOptions
+   */
   private $_moduleOptions;
+
+  /**
+   * @var ConsentCookie
+   */
+  private $_consentCookie;
 
   /**
   * PHP5 Constructor

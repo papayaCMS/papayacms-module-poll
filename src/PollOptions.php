@@ -16,6 +16,9 @@ namespace Papaya\Module\Poll {
 
     const OPTION_CONSENT_COOKIE_LEVEL = 'CONSENT_COOKIE_LEVEL';
 
+
+    public $guid = '9a635f774ad6c2149125f6f4eb05fcba';
+
     private static $_defaults = array(
       self::OPTION_CONSENT_COOKIE_LEVEL => -1
     );

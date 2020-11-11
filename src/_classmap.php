@@ -4,4 +4,5 @@ return array(
   'base_poll' => '/base_poll.php',
   'content_poll' => '/content_poll.php',
   'edmodule_poll' => '/edmodule_poll.php',
+  'Papaya\Module\Poll\PollOptions' => 'PollOptions.php'
 );

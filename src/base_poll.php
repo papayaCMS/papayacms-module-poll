@@ -16,6 +16,8 @@
 * @version $Id: base_poll.php 39818 2014-05-13 13:15:13Z weinert $
 */
 
+use Papaya\Session\ConsentCookie;
+
 /**
 * Function class for polls
 * @package Papaya-Modules
@@ -124,6 +126,8 @@ class base_poll extends base_db {
    * @var base_plugin
    */
   public $module;
+
+  private $_moduleOptions;
 
   /**
   * PHP5 Constructor
@@ -1070,15 +1074,21 @@ class base_poll extends base_db {
   * @return boolean
   */
   function addResult($pollId, $answerId, $userId, $surferIp) {
-    srand((double)microtime() * 1000000);
-    $cookie = md5(uniqid(rand()));
+    $cookie = md5(\Papaya\Utility\Random::getId());
     $now = time();
     $data = array(
       'poll_id' => $pollId, 'answer_id' => $answerId, 'surfer_time' => $now,
       'surfer_ip' => $surferIp, 'user_id' => $userId, 'surfer_cookie' => $cookie
     );
     if ( $this->userCanVote() ) {
-      if ($this->databaseInsertRecord($this->tableResults, 'result_id', $data)) {
+      $consentCookieLevel = $this->moduleOptions()->getConsentCookieLevel();
+      if (
+        $this->databaseInsertRecord($this->tableResults, 'result_id', $data) &&
+        (
+          $consentCookieLevel < 0 ||
+          $this->consentCookie()->hasLevel($consentCookieLevel)
+        )
+      ) {
         setcookie(
           'poll['.(int)$pollId.']', $cookie, $this->pollData['end_time'] + 1209600
         );
@@ -1091,6 +1101,15 @@ class base_poll extends base_db {
     }
   }
 
+  public function consentCookie(ConsentCookie $consentCookie = NULL) {
+    if (NULL !== $consentCookie) {
+      $this->_consentCookie = $consentCookie;
+    } elseif (NULL === $this->_consentCookie) {
+      $this->_consentCookie = new ConsentCookie();
+      $this->_consentCookie->papaya($this->papaya());
+    }
+    return $this->_consentCookie;
+  }
 
   /**
   * get category edit form xml
@@ -1588,5 +1607,15 @@ class base_poll extends base_db {
       );
     }
     return $result;
+  }
+
+  public function moduleOptions(\Papaya\Module\Poll\PollOptions $options = NULL) {
+    if (NULL !== $options) {
+      $this->_moduleOptions = $options;
+    } elseif (NULL === $this->_moduleOptions) {
+      $this->_moduleOptions = new \Papaya\Module\Poll\PollOptions();
+      $this->_moduleOptions->papaya($this->papaya());
+    }
+    return $this->_moduleOptions;
   }
 }

@@ -24,6 +24,7 @@
 * @subpackage Free-Poll
 */
 class edmodule_poll extends base_module {
+  
   /**
   * GUID
   * @var string $guid
@@ -64,7 +65,6 @@ class edmodule_poll extends base_module {
     1 => 'Manage',
     2 => 'Edit categories',
   );
-
 
   /**
   * Execute module

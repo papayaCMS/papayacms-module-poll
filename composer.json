@@ -8,7 +8,7 @@
     "papaya/cms-core": "*"
   },
   "require-dev": {
-    "papaya/cms-administration": "*",
+    "papaya/cms-administration": "^6.13.1",
     "papaya/template-responsive": "*",
     "papaya/theme-dynamic": "*"
   }

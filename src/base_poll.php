@@ -1085,8 +1085,12 @@ class base_poll extends base_db {
     $cookie = md5(\Papaya\Utility\Random::getId());
     $now = time();
     $data = array(
-      'poll_id' => $pollId, 'answer_id' => $answerId, 'surfer_time' => $now,
-      'surfer_ip' => $surferIp, 'user_id' => $userId, 'surfer_cookie' => $cookie
+      'poll_id' => $pollId,
+      'answer_id' => $answerId,
+      'surfer_time' => $now,
+      'surfer_ip' => $this->moduleOptions()->useIPLocking() ? $surferIp : '',
+      'user_id' => $userId,
+      'surfer_cookie' => $cookie
     );
     if ( $this->userCanVote() ) {
       $consentCookieLevel = $this->moduleOptions()->getConsentCookieLevel();
